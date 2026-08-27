@@ -15,7 +15,7 @@ class ServiceManager {
   }
 
   //* Trae un servicio por su id
-  getServicesById(id) {
+  getServiceById(id) {
     // find(): busca un servicio por su id
     const service = this.services.find((service) => service.id === id)
     if (!service) {
@@ -49,18 +49,18 @@ class ServiceManager {
   }
 
   //* Metodo para actualizar un servicio
-  updateService(id, data) {
-    const service = this.getServicesById(id)
+  updateService(id, updatedData) {
+    const service = this.getServiceById(id)
     if (!service) {
       throw new Error(`Servicio no ha sido encontrado`)
     } else {
       // Ej: si data.name es undefined, se mantiene el valor original. Sino se actualiza con el nuevo valor
-      service.name = data.name ?? service.name
-      service.description = data.description ?? service.description
-      service.duration = data.duration ?? service.duration
-      service.price = data.price ?? service.price
-      service.category = data.category ?? service.category
-      service.available = data.available ?? service.available
+      service.name = updatedData.name ?? service.name
+      service.description = updatedData.description ?? service.description
+      service.duration = updatedData.duration ?? service.duration
+      service.price = updatedData.price ?? service.price
+      service.category = updatedData.category ?? service.category
+      service.available = updatedData.available ?? service.available
       return service
     }
   }

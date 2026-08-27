@@ -59,12 +59,12 @@ Devuelve todos los servicios almacenados.
 serviceManager.getServices()
 ```
 
-#### `getServicesById()`
+#### `getServiceById()`
 
 Busca y devuelve un servicio mediante su ID. Si no encuentra ningún servicio con ese ID, devuelve un error.
 
 ```js
-serviceManager.getServicesById(id)
+serviceManager.getServiceById(id)
 ```
 
 #### `addService(name, description, duration, price, category, available)`
@@ -82,7 +82,7 @@ serviceManager.addService(
 )
 ```
 
-#### `updateService(id, data)`
+#### `updateService(id, updatedData)`
 
 Actualiza los datos de un servicio existente. Los campos que no se especifican mantienen su valor original.
 
@@ -164,12 +164,12 @@ Gibt alle gespeicherten Services zurück.
 serviceManager.getServices()
 ```
 
-#### `getServicesById()`
+#### `getServiceById()`
 
 Sucht einen Service anhand seiner ID und gibt ihn zurück. Wenn kein Service mit dieser ID gefunden wird, wird ein Fehler ausgegeben.
 
 ```js
-serviceManager.getServicesById(id)
+serviceManager.getServiceById(id)
 ```
 
 #### `addService(name, description, duration, price, category, available)`
@@ -187,7 +187,7 @@ serviceManager.addService(
 )
 ```
 
-#### `updateService(id, data)`
+#### `updateService(id, updatedData)`
 
 Aktualisiert die Daten eines bestehenden Services. Die Felder, die nicht angegeben werden, behalten ihren ursprünglichen Wert.
 
