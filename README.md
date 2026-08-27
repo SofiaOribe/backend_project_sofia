@@ -6,15 +6,16 @@ API backend para gestionar servicios y reservas de turnos. El proyecto utiliza N
 
 - Node.js
 - Express
+
 <!-- - MongoDB Atlas
 - Mongoose
 - Handlebars
 - Socket.io
 - Zod -->
+
 - ESM con import/export
 - ESLint
 - Prettier
-
 
 ## Instalación
 
@@ -40,6 +41,61 @@ npm start
 ```
 
 Para ejecutar el proyecto en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+## ----- Deutsch -----
+
+# Backend-System für Termine und Reservierungen
+
+Backend-API zur Verwaltung von Dienstleistungen und Terminreservierungen. Das Projekt verwendet Node.js und Express.
+
+## Technologien
+
+- Node.js
+- Express
+
+<!-- - MongoDB Atlas
+- Mongoose
+- Handlebars
+- Socket.io
+- Zod -->
+
+- ESM mit `import/export`
+- ESLint
+- Prettier
+
+## Installation
+
+```bash
+npm install
+```
+
+## Umgebungsvariablen
+
+Erstelle eine `.env`-Datei im Stammverzeichnis des Projekts und verwende dabei `.env.example` als Vorlage.
+
+```env
+PORT=8080
+
+APP_NAME=Backend-System für Termine und Reservierungen
+
+APP_ENV=development
+
+MONGO_URL=deine_MongoDB_URL
+```
+
+## Ausführung
+
+Um das Projekt zu starten:
+
+```bash
+npm start
+```
+
+Um das Projekt im Entwicklungsmodus auszuführen:
 
 ```bash
 npm run dev
