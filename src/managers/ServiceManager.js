@@ -66,11 +66,11 @@ class ServiceManager {
   }
 
   //* Metodo para eliminar un servicio
-  deleteService(name) {
+  deleteService(id) {
     // findIndex(): busca el indice del servicio por su nombre
-    const service = this.services.findIndex((service) => service.name === name)
+    const service = this.services.findIndex((service) => service.id === id)
     if (service === -1) {
-      throw new Error(`Servicio con nombre "${name}" no encontrado`)
+      throw new Error(`Servicio con nombre "${id}" no encontrado`)
     } else {
       return this.services.splice(service, 1) // Elimina el servicio del arreglo y lo retorna
     }
