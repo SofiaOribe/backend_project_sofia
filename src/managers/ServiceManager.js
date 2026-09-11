@@ -1,36 +1,41 @@
 import crypto from "crypto"
+import fs from "fs/promises"
 
-// Clase
 class ServiceManager {
-  //* Lista de servicios
-  constructor() {
-    this.services = []
+  constructor(path) {
+    this.path = path
   }
 
-  /* ------ Creacion de metodos en la clase ------ */
-
-  //* Metodo para traer todos los servicios
-  getServices() {
-    return this.services
+  async #readServices() {
+    // Metodo privado -> #
+    const data = await fs.readFile(this.path, "utf-8")
+    return JSON.parse(data) // Convierte JSON a objeto
   }
 
-  //* Trae un servicio por su id
-  getServiceById(id) {
-    // find(): busca un servicio por su id
-    const service = this.services.find((service) => service.id === id)
-    if (!service) {
-      throw new Error(`No es posible hallar el servicio`)
+  async #writeServices(services) {
+    await fs.writeFile(this.path, JSON.stringify(services, null, 2))
+  }
+
+  async getServices() {
+    return await this.#readServices()
+  }
+
+  async getServiceById(id) {
+    const services = await this.#readServices()
+    if (!services) {
+      return null
     }
-    return this.services.find((service) => service.id === id)
+    return services.find((service) => service.id === id)
   }
 
-  //* Metodo para crear un nuevo servicio
-  addService(name, description, duration, price, category, available) {
+  async addService(name, description, duration, price, category, available) {
+    const services = await this.#readServices()
+
     if (!name || !description || !duration || !price || !category || available === undefined) {
-      throw new Error("Todos los campos son obligatorios")
+      return null
     } else {
       const newService = {
-        id: crypto.randomUUID(), // Genera un id unico
+        id: crypto.randomUUID(),
         name,
         description,
         duration,
@@ -39,8 +44,8 @@ class ServiceManager {
         available,
       }
 
-      // Agrega el nuevo servicio al arreglo de servicios
-      this.services.push(newService)
+      services.push(newService)
+      await this.#writeServices(services)
       console.log(
         `Se ha agregado: ${newService.name} - ${newService.description} - ${newService.duration} - ${newService.price} - ${newService.category} - ${newService.available}`,
       )
@@ -48,32 +53,26 @@ class ServiceManager {
     }
   }
 
-  //* Metodo para actualizar un servicio
-  updateService(id, updatedData) {
-    const service = this.getServiceById(id)
-    if (!service) {
-      throw new Error(`Servicio no ha sido encontrado`)
-    } else {
-      // Ej: si data.name es undefined, se mantiene el valor original. Sino se actualiza con el nuevo valor
-      service.name = updatedData.name ?? service.name
-      service.description = updatedData.description ?? service.description
-      service.duration = updatedData.duration ?? service.duration
-      service.price = updatedData.price ?? service.price
-      service.category = updatedData.category ?? service.category
-      service.available = updatedData.available ?? service.available
-      return service
+  async updateService(id, updatedData) {
+    const services = await this.#readServices()
+    const index = services.findIndex((service) => service.id === id)
+    if (index === -1) {
+      return null
     }
+    services[index] = { ...services[index], ...updatedData }
+    await this.#writeServices(services)
+    return services[index]
   }
 
-  //* Metodo para eliminar un servicio
-  deleteService(id) {
-    // findIndex(): busca el indice del servicio por su nombre
-    const service = this.services.findIndex((service) => service.id === id)
-    if (service === -1) {
-      throw new Error(`Servicio con nombre "${id}" no encontrado`)
-    } else {
-      return this.services.splice(service, 1) // Elimina el servicio del arreglo y lo retorna
+  async deleteService(id) {
+    const services = await this.#readServices()
+    const index = services.findIndex((service) => service.id === id)
+    if (index === -1) {
+      return null
     }
+    const deletedService = services.splice(index, 1)[0]
+    await this.#writeServices(services)
+    return deletedService
   }
 }
 

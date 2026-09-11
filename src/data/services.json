@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ac93fb31-551d-4aea-9394-2463d7ed7769",
+    "name": "Turno Neurologo update",
+    "description": "Turno Neurologo",
+    "duration": "30 minutos",
+    "price": 60000,
+    "category": "Medico clinico",
+    "available": true
+  }
+]
