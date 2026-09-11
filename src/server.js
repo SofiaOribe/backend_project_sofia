@@ -1,18 +1,18 @@
 import express from "express"
 import env from "./config/env.config.js"
 import ServiceManager from "./managers/ServiceManager.js"
+import BookingManager from "./managers/BookingManager.js"
 
-const serviceManager = new ServiceManager()
+const serviceManager = new ServiceManager("./src/data/services.json")
+const bookingManager = new BookingManager("./src/data/bookings.json")
 const app = express()
-
-// Establecemos el middleware para parsear el body de las peticiones
 
 app.use(express.json(), express.urlencoded({ extended: true }))
 
-// mas adelante por filtros  ?category=salud, ?available=true
+// filtros: ?category=salud, ?available=true
 app.get("/api/services", async (req, res, next) => {
   try {
-    const services = serviceManager.getServices()
+    const services = await serviceManager.getServices()
     res.status(200).json(services)
     res.status(404).json({ message: "Error al tratar de obtener los datos" })
   } catch (error) {
@@ -23,7 +23,7 @@ app.get("/api/services", async (req, res, next) => {
 app.get("/api/services/:id", async (req, res, next) => {
   try {
     const id = req.params.id
-    const service = serviceManager.getServiceById(id)
+    const service = await serviceManager.getServiceById(id)
     res.status(200).json(service)
     res.status(404).json({ message: "Error al tratar de obtener el servicio" })
   } catch (error) {
@@ -34,7 +34,7 @@ app.get("/api/services/:id", async (req, res, next) => {
 app.post("/api/services", async (req, res, next) => {
   try {
     const { name, description, duration, price, category, available } = req.body
-    const newService = serviceManager.addService(name, description, duration, price, category, available)
+    const newService = await serviceManager.addService(name, description, duration, price, category, available)
     res.status(201).json({ message: "Nuevo servicio creado", newService })
     res.status(400).json({ message: "Error al tratar de crear servicio" })
   } catch (error) {
@@ -45,7 +45,7 @@ app.post("/api/services", async (req, res, next) => {
 app.put("/api/services/:id", async (req, res, next) => {
   try {
     const id = req.params.id
-    const updatedService = serviceManager.updateService(id, req.body)
+    const updatedService = await serviceManager.updateService(id, req.body)
 
     res.status(201).json({ message: "Servicio actualizado", updatedService })
     res.status(404).json({ message: "Error al tratar de actualizar los datos" })
@@ -57,10 +57,12 @@ app.put("/api/services/:id", async (req, res, next) => {
 app.delete("/api/services/:id", async (req, res, next) => {
   try {
     const id = req.params.id
-    const deletedService = serviceManager.delete(id)
+    const deletedService = await serviceManager.deleteService(id)
+    if (!deletedService) {
+      res.status(404).json({ message: "Error al tratar de eliminar los datos" })
+    }
 
     res.status(201).json({ message: "Servicio eliminado", deletedService })
-    res.status(404).json({ message: "Error al tratar de eliminar los datos" })
   } catch (error) {
     console.log(error)
   }
@@ -70,43 +72,50 @@ app.listen(env.PORT, () => {
   console.log("Servidor corre en " + env.PORT)
 })
 
-/* ------------------------------------- TEORIA ------------------------------------- */
+// Rutas para bookings
 
-// * Definimos una ruta de prueba para el servidor
+app.post("/api/bookings", async (req, res, next) => {
+  try {
+    const { clientName, clientEmail, date, time, status } = req.body
+    const newBooking = await bookingManager.createBooking(clientName, clientEmail, date, time, status)
+    if (!newBooking) {
+      res.status(400).json({ message: "Error al tratar de crear reserva" })
+    }
+    res.status(201).json({ message: "Nueva reserva creada", newBooking })
+  } catch (error) {
+    console.log(error)
+  }
+})
 
-/* 
- * Metodos HTTP:
-  - GET: Obtener datos del servidor. Tiende a exponer por completo la consulta, por lo que no es       recomendable para datos sensibles
-  - POST: Enviar datos al servidor. Oculta parte de la información. O crea nuevos datos en el servidor
-  - PUT: Actualizar datos en el servidor
-  - PATCH: Actualizar parcialmente datos en el servidor
-  - DELETE: Eliminar datos del servidor
+app.get("/api/bookings/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const booking = await bookingManager.getBookingById(id)
+    if (!booking) {
+      res.status(404).json({ message: "Reserva no encontrada" })
+    }
+    res.status(200).json({ message: "Nueva reserva creada", booking })
+  } catch (error) {
+    console.log(error)
+  }
+})
 
- Estos son responsables de las operaciones CRUD (Create, Read, Update, Delete) que se realizan en el servidor
+app.post("/api/bookings/:bookingId/services/:serviceId", async (req, res, next) => {
+  try {
+    const { bookingId, serviceId } = req.params
+    const booking = await bookingManager.getBookingById(bookingId)
+    if (!booking) {
+      res.status(404).json({ message: "Reserva no encontrada" })
+    }
 
-  
-*/
+    const service = await serviceManager.getServiceById(serviceId)
+    if (!service) {
+      res.status(404).json({ message: "Servicio no encontrado" })
+    }
 
-// Puede recibir entre 1 hasta 3 o 4  parámetros, siendo el primero la ruta y el segundo la función callback que se ejecutará cuando se haga una petición a esa ruta. El cuarto parametro se pone primero y es opcional se llama error.
-
-/* app.get("/", async (request, response, next) => {
-  
-    Funciones callback
-    request (req) = lo que viene del cliente
-    response = lo que enviamos al cliente
- 
-
-
-
-
-  console.log(request.headers)
-  response.send({
-    mensaje: "Bienvenido al Backend de Servicios de Turnos",
-    status: "activo",
-  })
-  response.download("") ---> Permite descargar un archivo desde el servidor
-}) */
-
-/* 
-  Middleware: es una función que se ejecuta antes de la función callback de la ruta. Se utiliza para procesar la petición antes de enviarla a la función callback. Se puede utilizar para validar datos, autenticar usuarios, etc.
-  */
+    const updatedBooking = await bookingManager.addServiceToBooking(bookingId, serviceId)
+    res.status(201).json({ message: "Servicio agregado a la reserva", updatedBooking })
+  } catch (error) {
+    console.log(error)
+  }
+})
