@@ -1,121 +1,35 @@
 import express from "express"
 import env from "./config/env.config.js"
-import ServiceManager from "./managers/ServiceManager.js"
-import BookingManager from "./managers/BookingManager.js"
+import { notFound, routingDetector } from "./middlewares/routingDetector.js"
+import { errorHandler } from "./middlewares/errorHandler.js"
+import bookingsRouter from "./routes/bookings.router.js"
+import servicesRouter from "./routes/services.router.js"
 
-const serviceManager = new ServiceManager("./src/data/services.json")
-const bookingManager = new BookingManager("./src/data/bookings.json")
 const app = express()
 
-app.use(express.json(), express.urlencoded({ extended: true }))
+app.use(routingDetector)
 
-// filtros: ?category=salud, ?available=true
-app.get("/api/services", async (req, res, next) => {
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use("/api/services", servicesRouter)
+app.use("/api/bookings", bookingsRouter)
+
+app.get("/", async (req, res, next) => {
   try {
-    const services = await serviceManager.getServices()
-    res.status(200).json(services)
-    res.status(404).json({ message: "Error al tratar de obtener los datos" })
+    throw new Error("Error de prueba")
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 })
 
-app.get("/api/services/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const service = await serviceManager.getServiceById(id)
-    res.status(200).json(service)
-    res.status(404).json({ message: "Error al tratar de obtener el servicio" })
-  } catch (error) {
-    console.log(error)
-  }
+app.use(async (err, req, res, next) => {
+  res.status(500).json({ error: err.message })
 })
 
-app.post("/api/services", async (req, res, next) => {
-  try {
-    const { name, description, duration, price, category, available } = req.body
-    const newService = await serviceManager.addService(name, description, duration, price, category, available)
-    res.status(201).json({ message: "Nuevo servicio creado", newService })
-    res.status(400).json({ message: "Error al tratar de crear servicio" })
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-app.put("/api/services/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const updatedService = await serviceManager.updateService(id, req.body)
-
-    res.status(201).json({ message: "Servicio actualizado", updatedService })
-    res.status(404).json({ message: "Error al tratar de actualizar los datos" })
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-app.delete("/api/services/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const deletedService = await serviceManager.deleteService(id)
-    if (!deletedService) {
-      res.status(404).json({ message: "Error al tratar de eliminar los datos" })
-    }
-
-    res.status(201).json({ message: "Servicio eliminado", deletedService })
-  } catch (error) {
-    console.log(error)
-  }
-})
+app.use(errorHandler)
+app.use(notFound)
 
 app.listen(env.PORT, () => {
   console.log("Servidor corre en " + env.PORT)
-})
-
-// Rutas para bookings
-
-app.post("/api/bookings", async (req, res, next) => {
-  try {
-    const { clientName, clientEmail, date, time, status } = req.body
-    const newBooking = await bookingManager.createBooking(clientName, clientEmail, date, time, status)
-    if (!newBooking) {
-      res.status(400).json({ message: "Error al tratar de crear reserva" })
-    }
-    res.status(201).json({ message: "Nueva reserva creada", newBooking })
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-app.get("/api/bookings/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const booking = await bookingManager.getBookingById(id)
-    if (!booking) {
-      res.status(404).json({ message: "Reserva no encontrada" })
-    }
-    res.status(200).json({ message: "Nueva reserva creada", booking })
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-app.post("/api/bookings/:bookingId/services/:serviceId", async (req, res, next) => {
-  try {
-    const { bookingId, serviceId } = req.params
-    const booking = await bookingManager.getBookingById(bookingId)
-    if (!booking) {
-      res.status(404).json({ message: "Reserva no encontrada" })
-    }
-
-    const service = await serviceManager.getServiceById(serviceId)
-    if (!service) {
-      res.status(404).json({ message: "Servicio no encontrado" })
-    }
-
-    const updatedBooking = await bookingManager.addServiceToBooking(bookingId, serviceId)
-    res.status(201).json({ message: "Servicio agregado a la reserva", updatedBooking })
-  } catch (error) {
-    console.log(error)
-  }
 })

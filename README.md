@@ -67,12 +67,12 @@ Busca y devuelve un servicio mediante su ID. Si no encuentra ningún servicio co
 serviceManager.getServiceById(id)
 ```
 
-#### `addService(name, description, duration, price, category, available)`
+#### `createService(name, description, duration, price, category, available)`
 
 Crea un nuevo servicio y lo agrega a la lista. Todos los campos son obligatorios.
 
 ```js
-serviceManager.addService(
+serviceManager.createService(
   "Consulta clínica",
   "Consulta personalizada en consultorio clínico",
   60,
@@ -172,12 +172,12 @@ Sucht einen Service anhand seiner ID und gibt ihn zurück. Wenn kein Service mit
 serviceManager.getServiceById(id)
 ```
 
-#### `addService(name, description, duration, price, category, available)`
+#### `createService(name, description, duration, price, category, available)`
 
 Erstellt einen neuen Service und fügt ihn zur Liste hinzu. Alle Felder sind erforderlich.
 
 ```js
-serviceManager.addService(
+serviceManager.createService(
   "Klinische Beratung",
   "Persönliche Beratung in einer klinischen Praxis",
   60,

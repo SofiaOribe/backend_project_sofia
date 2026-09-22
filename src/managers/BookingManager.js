@@ -11,8 +11,8 @@ class BookingManager {
     return JSON.parse(data)
   }
 
-  async #writeBookings(services) {
-    await fs.writeFile(this.path, JSON.stringify(services, null, 2))
+  async #writeBookings(bookings) {
+    await fs.writeFile(this.path, JSON.stringify(bookings, null, 2))
   }
 
   async getBookings() {
@@ -48,7 +48,7 @@ class BookingManager {
       return newBooking
     }
   }
-   async addServiceToBooking(bookingId, serviceId) {
+  async addServiceToBooking(bookingId, serviceId) {
     const bookings = await this.#readBookings()
 
     const booking = bookings.find((booking) => booking.id === bookingId)
@@ -57,9 +57,7 @@ class BookingManager {
       return null
     }
 
-    const existingService = booking.services.find(
-      (item) => item.service === serviceId
-    )
+    const existingService = booking.services.find((item) => item.service === serviceId)
 
     if (existingService) {
       existingService.quantity++
@@ -74,7 +72,6 @@ class BookingManager {
 
     return booking
   }
-
 }
 
 export default BookingManager
