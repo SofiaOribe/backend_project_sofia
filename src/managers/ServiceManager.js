@@ -28,7 +28,7 @@ class ServiceManager {
     return services.find((service) => service.id === id)
   }
 
-  async addService(name, description, duration, price, category, available) {
+  async createService(name, description, duration, price, category, available) {
     const services = await this.#readServices()
 
     if (!name || !description || !duration || !price || !category || available === undefined) {
@@ -46,9 +46,9 @@ class ServiceManager {
 
       services.push(newService)
       await this.#writeServices(services)
-      console.log(
+      /* console.log(
         `Se ha agregado: ${newService.name} - ${newService.description} - ${newService.duration} - ${newService.price} - ${newService.category} - ${newService.available}`,
-      )
+      ) */
       return newService
     }
   }
