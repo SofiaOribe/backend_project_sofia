@@ -1,26 +1,25 @@
 import crypto from "crypto"
 import fs from "fs/promises"
 
-class ServiceManager {
+class ServiceDao {
   constructor(path) {
     this.path = path
   }
 
   async #readServices() {
-    // Metodo privado -> #
     const data = await fs.readFile(this.path, "utf-8")
-    return JSON.parse(data) // Convierte JSON a objeto
+    return JSON.parse(data)
   }
 
   async #writeServices(services) {
     await fs.writeFile(this.path, JSON.stringify(services, null, 2))
   }
 
-  async getServices() {
+  async getAll() {
     return await this.#readServices()
   }
 
-  async getServiceById(id) {
+  async getById(id) {
     const services = await this.#readServices()
     if (!services) {
       return null
@@ -28,9 +27,9 @@ class ServiceManager {
     return services.find((service) => service.id === id)
   }
 
-  async createService(name, description, duration, price, category, available) {
+  async create(data) {
     const services = await this.#readServices()
-
+    const { name, description, duration, price, category, available } = data
     if (!name || !description || !duration || !price || !category || available === undefined) {
       return null
     } else {
@@ -46,14 +45,11 @@ class ServiceManager {
 
       services.push(newService)
       await this.#writeServices(services)
-      /* console.log(
-        `Se ha agregado: ${newService.name} - ${newService.description} - ${newService.duration} - ${newService.price} - ${newService.category} - ${newService.available}`,
-      ) */
       return newService
     }
   }
 
-  async updateService(id, updatedData) {
+  async update(id, updatedData) {
     const services = await this.#readServices()
     const index = services.findIndex((service) => service.id === id)
     if (index === -1) {
@@ -64,7 +60,7 @@ class ServiceManager {
     return services[index]
   }
 
-  async deleteService(id) {
+  async delete(id) {
     const services = await this.#readServices()
     const index = services.findIndex((service) => service.id === id)
     if (index === -1) {
@@ -76,4 +72,4 @@ class ServiceManager {
   }
 }
 
-export default ServiceManager
+export default ServiceDao

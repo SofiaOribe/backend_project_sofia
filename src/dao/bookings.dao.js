@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import fs from "fs/promises"
 
-class BookingManager {
+class BookingsDao {
   constructor(path) {
     this.path = path
   }
@@ -15,11 +15,11 @@ class BookingManager {
     await fs.writeFile(this.path, JSON.stringify(bookings, null, 2))
   }
 
-  async getBookings() {
+  async getAll() {
     return await this.#readBookings()
   }
 
-  async getBookingById(id) {
+  async getById(id) {
     const bookings = await this.#readBookings()
     if (!bookings) {
       return null
@@ -27,8 +27,9 @@ class BookingManager {
     return bookings.find((booking) => booking.id === id)
   }
 
-  async createBooking(clientName, clientEmail, date, time, status) {
+  async create(data) {
     const booking = await this.#readBookings()
+    const { clientName, clientEmail, date, time, status } = data
 
     if (!clientName || !clientEmail || !date || !time || !status) {
       return null
@@ -48,7 +49,8 @@ class BookingManager {
       return newBooking
     }
   }
-  async addServiceToBooking(bookingId, serviceId) {
+
+  async update(bookingId, serviceId) {
     const bookings = await this.#readBookings()
 
     const booking = bookings.find((booking) => booking.id === bookingId)
@@ -74,4 +76,4 @@ class BookingManager {
   }
 }
 
-export default BookingManager
+export default BookingsDao
