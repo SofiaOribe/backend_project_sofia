@@ -4,6 +4,7 @@ import { notFound, routingDetector } from "./middlewares/routingDetector.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import bookingsRouter from "./routes/bookings.router.js"
 import servicesRouter from "./routes/services.router.js"
+import connectDB from "./config/db.js"
 
 const app = express()
 
@@ -32,4 +33,11 @@ app.use(notFound)
 
 app.listen(env.PORT, () => {
   console.log("Servidor corre en " + env.PORT)
+  connectDB()
+    .then(() => {
+      console.log("Conectado a DB")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 })
