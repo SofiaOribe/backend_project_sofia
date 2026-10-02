@@ -1,7 +1,7 @@
-import ServiceDao from "../dao/services.dao.js"
+import ServiceDao from "../dao/services.mongo.dao.js"
 
 class ServicesRepository {
-  constructor(dao = new ServiceDao("./src/data/services.json")) {
+  constructor(dao = new ServiceDao()) {
     this.dao = dao
   }
 
