@@ -9,9 +9,9 @@ class BookingsService {
     return await this.repository.getBookings()
   }
   async getBookingById(id) {
-    const service = await this.repository.getBookingById(id)
-    if (!service) throw new Error(`El booking con ID ${id} no fue encontrado`)
-    return service
+    const booking = await this.repository.getBookingById(id)
+    if (!booking) throw new Error(`El booking con ID ${id} no fue encontrado`)
+    return booking
   }
 
   async createBooking(data) {
@@ -23,14 +23,18 @@ class BookingsService {
     return await this.repository.createBooking(data)
   }
 
-  async addServiceToBooking(bookingId, serviceId) {
-    const updatedBooking = await this.repository.addServiceToBooking(bookingId, serviceId)
+  async addServiceToBooking(bid, sid) {
+    const booking = await this.repository.getBookingById(bid)
 
-    if (!updatedBooking) {
-      throw new Error(`El booking con ID ${bookingId} no fue encontrado`)
+    const existingService = booking.services.find(
+      (item) => item.service.toString() === sid.toString(),
+    )
+    if (existingService) {
+      existingService.quantity += 1
+    } else {
+      booking.services.push({ service: sid, quantity: 1 })
     }
-
-    return updatedBooking
+    return await this.repository.addServiceToBooking(booking)
   }
 }
 

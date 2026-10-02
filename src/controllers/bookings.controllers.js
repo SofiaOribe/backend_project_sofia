@@ -43,15 +43,15 @@ class BookingsController {
 
   static async addServiceToBookingController(req, res, next) {
     try {
-      const { bookingId, serviceId } = req.params
+      const { bid, sid } = req.params
 
-      const updatedBooking = await bookingsServiceInstance.addServiceToBooking(bookingId, serviceId)
+      const updatedBooking = await bookingsServiceInstance.addServiceToBooking(bid, sid)
       return res.status(200).json({ message: "Servicio agregado a la reserva", updatedBooking })
     } catch (error) {
       return res.status(500).json({
         message:
           error.message ||
-          "Error al tratar de agregar el servicio a la reserva con el ID: " + req.params.bookingId,
+          "Error al tratar de agregar el servicio a la reserva con el ID: " + req.params.bid,
       })
     }
   }
