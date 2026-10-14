@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose"
 
-// Constructor
 const bookingSchema = new Schema(
   {
     clientName: {

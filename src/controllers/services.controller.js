@@ -6,7 +6,16 @@ class ServiceController {
   static async getServicesController(req, res, next) {
     try {
       const services = await serviceServiceInstance.getServices()
-
+      return res.status(200).json(services)
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message || "Error al tratar de obtener los servicios",
+      })
+    }
+  }
+  static async getServicesPaginatedController(req, res, next) {
+    try {
+      const services = await serviceServiceInstance.getServicesPaginated(req.query)
       return res.status(200).json(services)
     } catch (error) {
       return res.status(500).json({
@@ -17,13 +26,13 @@ class ServiceController {
 
   static async getServicesByIdController(req, res, next) {
     try {
-      const id = req.params.id
-      const service = await serviceServiceInstance.getServiceById(id)
+      const sid = req.params.sid
+      const service = await serviceServiceInstance.getServiceById(sid)
       return res.status(200).json(service)
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de obtener el servicio con el ID: " + req.params.id,
+          error.message || "Error al tratar de obtener el servicio con el ID: " + req.params.sid,
       })
     }
   }
@@ -41,8 +50,8 @@ class ServiceController {
   }
   static async updateServiceController(req, res, next) {
     try {
-      const id = req.params.id
-      const updatedService = await serviceServiceInstance.updateService(id, req.body)
+      const sid = req.params.sid
+      const updatedService = await serviceServiceInstance.updateService(sid, req.body)
 
       return res.status(200).json({ message: "Servicio actualizado", updatedService })
     } catch (error) {
@@ -54,14 +63,14 @@ class ServiceController {
   }
   static async deleteServiceController(req, res, next) {
     try {
-      const id = req.params.id
-      const deletedService = await serviceServiceInstance.deleteService(id)
+      const sid = req.params.sid
+      const deletedService = await serviceServiceInstance.deleteService(sid)
 
       return res.status(200).json({ message: "Servicio eliminado", deletedService })
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de eliminar el servicio con el ID: " + req.params.id,
+          error.message || "Error al tratar de eliminar el servicio con el ID: " + req.params.sid,
       })
     }
   }

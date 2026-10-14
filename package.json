@@ -24,7 +24,11 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.10.2"
+    "express-handlebars": "^8.0.1",
+    "handlebars": "^4.7.10",
+    "mongoose": "^9.10.2",
+    "mongoose-paginate-v2": "^1.9.5",
+    "socket.io": "^4.8.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

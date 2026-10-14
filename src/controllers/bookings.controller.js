@@ -5,8 +5,9 @@ const bookingsServiceInstance = new BookingsService()
 class BookingsController {
   static async getBookingsController(req, res, next) {
     try {
-      const services = await bookingsServiceInstance.getBookings()
-      return res.status(200).json(services)
+      const bookings = await bookingsServiceInstance.getBookings()
+
+      return res.status(200).json(bookings)
     } catch (error) {
       return res.status(500).json({
         message: error.message || "Error al tratar de obtener los bookings",
@@ -52,6 +53,20 @@ class BookingsController {
         message:
           error.message ||
           "Error al tratar de agregar el servicio a la reserva con el ID: " + req.params.bid,
+      })
+    }
+  }
+
+  static async deleteBookingController(req, res, next) {
+    try {
+      const bid = req.params.bid
+      console.log("ID recibido por el controller:", bid)
+      const deletedBooking = await bookingsServiceInstance.deleteBooking(bid)
+      return res.status(200).json({ message: "Booking eliminado", deletedBooking })
+    } catch (error) {
+      return res.status(500).json({
+        message:
+          error.message || "Error al tratar de eliminar el servicio con el ID: " + req.params.sid,
       })
     }
   }

@@ -5,6 +5,9 @@ class ServicesRepository {
     this.dao = dao
   }
 
+  async getServicesPaginated(query) {
+    return await this.dao.getServicesPaginated(query)
+  }
   async getServices() {
     return await this.dao.getAll()
   }
