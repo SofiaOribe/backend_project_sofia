@@ -8,6 +8,11 @@ class ServicesService {
   async getServices() {
     return await this.repository.getServices()
   }
+
+  async getServicesPaginated(query) {
+    return await this.repository.getServicesPaginated(query)
+  }
+
   async getServiceById(id) {
     const service = await this.repository.getServiceById(id)
     if (!service) throw new Error(`El servicio con ${id} no fue encontrado`)

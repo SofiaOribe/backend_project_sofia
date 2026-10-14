@@ -1,11 +1,12 @@
-import {  Schema, model } from "mongoose"
+import { Schema, model } from "mongoose"
+import paginate from "mongoose-paginate-v2"
 
-// Constructor
 const serviceSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
+      index: true,
     },
     description: {
       type: String,
@@ -22,17 +23,19 @@ const serviceSchema = new Schema(
     category: {
       type: String,
       required: true,
+      index: true,
     },
     available: {
       type: Boolean,
       default: true,
+      index: true,
     },
   },
   { timestamps: true },
 )
 
+serviceSchema.plugin(paginate)
 
 const serviceModel = model("services", serviceSchema)
 
 export default serviceModel
-

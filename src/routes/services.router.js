@@ -8,6 +8,7 @@ router.use(express.json(), express.urlencoded({ extended: true }))
 router
   .route("/")
   .get(ServiceController.getServicesController)
+  .get(ServiceController.getServicesPaginatedController)
   .post(express.json(), urlencoded({ extended: true }), ServiceController.createServiceController)
 
 router

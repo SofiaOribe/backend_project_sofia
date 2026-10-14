@@ -1,7 +1,7 @@
 import BookingsDao from "../dao/bookings.mongo.dao.js"
 
 class BookingsRepository {
-  constructor(dao = new BookingsDao("./src/data/bookings.json")) {
+  constructor(dao = new BookingsDao()) {
     this.dao = dao
   }
 
@@ -14,8 +14,11 @@ class BookingsRepository {
   async createBooking(data) {
     return await this.dao.create(data)
   }
-  async addServiceToBooking(updatedData) {
-    return await this.dao.update(updatedData)
+  async addServiceToBooking(id, data) {
+    return await this.dao.update(id, data)
+  }
+  async deleteBooking(id) {
+    return await this.dao.delete(id)
   }
 }
 

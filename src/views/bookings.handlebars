@@ -1,0 +1,179 @@
+
+<div class="bookings-container">
+    <div class="bookings-header">
+        <h2>Bookings</h2>
+        <p>Manage and view all bookings.</p>
+    </div>
+
+      <form id="booking-form" class="service-form">
+        <h3>Add new booking</h3>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="clientName">Client name</label>
+                <input
+                    type="text"
+                    id="clientName"
+                    name="clientName"
+                    placeholder="John Due"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="clientEmail">Email</label>
+                <input
+                    type="email"
+                    id="clientEmail"
+                    name="clientEmail"
+                    placeholder="example@email.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="time">Service hour</label>
+                <input
+                    type="time"
+                    id="time"
+                    name="time"
+                    required
+                >
+            </div>
+
+            <div class="form-group form-group-full ">
+                <label for="status">State</label>
+                <select id="status" name="status" class="booking-service-select" required>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="cancelled">Canceled</option>
+                </select>
+            </div>
+        </div>
+
+        <p id="booking-form-message" role="status"></p>
+
+        <button type="submit" class="submit-button ">
+            Create booking
+        </button>
+
+    </form>
+
+    {{#if bookings.length}}
+        <div class="table-wrapper">
+            <table class="bookings-table">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Services</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#each bookings}}
+                        <tr>
+                            <td class="client-name">
+                                {{clientName}}
+                            </td>
+
+                            <td>{{clientEmail}}</td>
+                            <td>{{date}}</td>
+                            <td>{{time}}</td>
+
+                            <td>
+                                <span class="status-badge {{status}}">
+                                    {{status}}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{#if services.length}}
+                                    <div class="services-list">
+                                        {{#each services}}
+                                            <div class="service-item">
+                                                <span>
+                                                   Name: {{service.name}}
+                                                </span>
+                                                <span class="quantity">
+                                                    Quantity: {{quantity}}
+                                                </span>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                {{else}}
+                                    <span class="empty-value">
+                                      There are no services
+                                    </span>
+                                {{/if}}
+                            </td>
+                            <td>
+                            
+                               <div class="booking-actions">
+                                    <button
+                                        type="button"
+                                        class="delete-booking-button"
+                                        data-booking-id="{{_id}}"
+                                    >
+                                        Delete
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="add-service-button"
+                                        data-booking-id="{{_id}}"
+                                    >
+                                        Add service
+                                    </button>
+
+                                    <div class="add-service-controls" style="display: none;">
+                                        <select class="add-service-select booking-service-select">
+                                            <option value="">Select a service</option>
+
+                                            {{#each @root.services}}
+                                                <option value="{{_id}}">
+                                                    {{name}} — ${{price}}
+                                                </option>
+                                            {{/each}}
+                                        </select>
+
+                                        <button
+                                            type="button"
+                                            class="confirm-add-service-button"
+                                        >
+                                            Confirm
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="cancel-add-service-button delete-booking-button"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    {{else}}
+        <p class="empty-message">No bookings available.</p>
+    {{/if}}
+</div>
+<script src="/js/bookings.js" defer></script>

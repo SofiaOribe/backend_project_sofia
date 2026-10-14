@@ -1,0 +1,183 @@
+<div class="services-container">
+    <div class="services-header">
+        <h2>Services</h2>
+        <p>Manage and view all available services.</p>
+    </div>
+
+        <form id="service-form" class="service-form">
+
+        <h3>Add new service</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Facial hair removal"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input
+                    type="text"
+                    id="category"
+                    name="category"
+                    placeholder="Cosmetology"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="duration">Duration (minutes)</label>
+                <input
+                    type="number"
+                    id="duration"
+                    name="duration"
+                    min="1"
+                    placeholder="30"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0"
+                    step="0.01"
+                    placeholder="25.00"
+                    required
+                >
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Service description..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group form-group-full checkbox-group add-padding">
+                <input
+                    type="checkbox"
+                    id="available"
+                    name="available"
+                    checked
+                >
+                <label for="available">
+                    Service available
+                </label>
+            </div>
+
+        </div>
+
+        <p id="form-message" role="status"></p>
+
+        <button type="submit" class="submit-button">
+            Add service
+        </button>
+
+    </form>
+
+    {{#if services.docs.length}}
+        <div class="table-wrapper">
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Availability</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+              <tbody>
+                {{#each services.docs}}
+                    <tr data-service-id="{{_id}}">
+                        <td class="service-name">
+                            {{name}}
+                        </td>
+
+                        <td class="service-description">
+                            {{description}}
+                        </td>
+                        <td class="service-description">
+                            {{category}}
+                        </td>
+
+                        <td>
+                            <div class="price-editor">
+                                <input
+                                    type="number"
+                                    class="price-input"
+                                    value="{{price}}"
+                                    min="0"
+                                    step="0.01"
+                                    aria-label="Precio de {{name}}"
+                                >
+                                <button
+                                    type="button"
+                                    class="save-price-button"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </td>
+
+                        <td>
+                            <label class="availability-control">
+                                <input
+                                    type="checkbox"
+                                    class="availability-input"
+                                    {{#if available}}checked{{/if}}
+                                >
+                                <span>
+                                    {{#if available}}
+                                        Available
+                                    {{else}}
+                                        Not available
+                                    {{/if}}
+                                </span>
+                            </label>
+                        </td>
+
+                        <td>
+                            <button
+                                type="button"
+                                class="delete-service-button"
+                            >
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+            </table>
+        </div>
+    {{else}}
+        <p class="empty-message">
+        No services are available.
+        </p>
+    {{/if}}
+
+{{#if services.hasPrevPage}}
+    <a href="/services?page={{services.prevPage}}" class="prev-page">Prev</a>
+
+{{/if}}
+{{#if services.hasNextPage}}
+     <a href="/services?page={{services.nextPage}}" class="prev-page">Next</a>
+{{/if}}
+</div>
+<script src="/js/services.js" defer></script>

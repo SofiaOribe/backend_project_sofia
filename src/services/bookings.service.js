@@ -26,15 +26,36 @@ class BookingsService {
   async addServiceToBooking(bid, sid) {
     const booking = await this.repository.getBookingById(bid)
 
-    const existingService = booking.services.find(
-      (item) => item.service.toString() === sid.toString(),
-    )
+    if (!booking) {
+      throw new Error(`Booking con ID ${bid} no encontrado`)
+    }
+
+    const existingService = booking.services.find((item) => {
+      const serviceId = item.service?._id ? item.service._id.toString() : item.service.toString()
+
+      return serviceId === sid.toString()
+    })
+
     if (existingService) {
       existingService.quantity += 1
     } else {
-      booking.services.push({ service: sid, quantity: 1 })
+      booking.services.push({
+        service: sid,
+        quantity: 1,
+      })
     }
-    return await this.repository.addServiceToBooking(booking)
+
+    return await this.repository.addServiceToBooking(bid, {
+      services: booking.services,
+    })
+  }
+
+  async deleteBooking(id) {
+    console.log(id, "gijksdlf")
+    const booking = await this.repository.getBookingById(id)
+    if (!booking) throw new Error(`Booking con ID ${id} no encontrado`)
+    const deletedService = await this.repository.deleteBooking(id)
+    return deletedService
   }
 }
 
