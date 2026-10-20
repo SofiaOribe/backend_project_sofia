@@ -40,6 +40,11 @@ const bookingSchema = new Schema(
   },
 )
 
+//Heredar contexto
+/* bookingSchema.pre("findOne", function () {
+  return this.populate("services.service")
+}) */
+
 const bookingModel = model("bookings", bookingSchema)
 
 export default bookingModel

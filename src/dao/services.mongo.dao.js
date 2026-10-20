@@ -2,13 +2,20 @@ import serviceModel from "../models/services.model.js"
 
 class ServiceDao {
   async getServicesPaginated(query = {}) {
-    const page = Math.max(1, Number.parseInt(query?.page, 10) || 1)
-
+    console.log("DAO EJECUTADO")
+    console.log("Query recibida:", query)
     return await serviceModel.paginate(
-      {},
       {
-        limit: 10,
-        page,
+        ...(query.name ? { name: { $regex: query.name, $options: "i" } } : {}),
+        ...(query.available !== undefined
+          ? { available: query.available === "true" || query.available === true }
+          : {}),
+        ...(query.category ? { category: query.category } : {}),
+      },
+      {
+        limit: query.limit || 10,
+        page: query.page || 1,
+        sort: query.sortBy ? { [query.sortBy]: query.order === "desc" ? -1 : 1 } : {},
         lean: true,
       },
     )

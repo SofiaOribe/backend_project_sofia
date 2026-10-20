@@ -11,6 +11,7 @@ class BookingsService {
   async getBookingById(id) {
     const booking = await this.repository.getBookingById(id)
     if (!booking) throw new Error(`El booking con ID ${id} no fue encontrado`)
+
     return booking
   }
 

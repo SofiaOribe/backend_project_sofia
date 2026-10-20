@@ -21,12 +21,12 @@ class ServicesService {
 
   async createService(data) {
     const { name, description, duration, price, category, available } = data
-    if (!name || !description || !duration || !price || !category || available === undefined) {
+    /* if (!name || !description || !duration || !price || !category || available === undefined) {
       throw new Error("Faltan datos obligatorios para crear el servicio")
     }
     if (price < 0) {
       throw new Error("El precio no puede ser negativo")
-    }
+    } */
     return await this.repository.createService({
       name,
       description,
