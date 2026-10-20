@@ -389,6 +389,3 @@ El script `npm test` actualmente es un placeholder y termina con un mensaje de q
 
 Podés probar las solicitudes HTTP con Postman, Insomnia o Thunder Client. Primero verificá que el servidor esté conectado a MongoDB. Para las operaciones de creación y actualización, enviá el header `Content-Type: application/json` y el body JSON que corresponda.
 
-## Estado de la implementación
-
-Este README describe la estructura que se encuentra actualmente en el repositorio. Algunas mejoras posibles para completar y reforzar la entrega son añadir validación Zod para las reservas y para las actualizaciones de servicios, validar IDs de MongoDB y limitar los campos permitidos en `sortBy`.
