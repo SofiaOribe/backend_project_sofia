@@ -148,3 +148,16 @@ document.addEventListener("click", async (event) => {
     button.disabled = false
   }
 })
+const bookingSocket = window.io()
+
+bookingSocket.on("booking:created", () => {
+  window.location.reload()
+})
+
+bookingSocket.on("booking:updated", () => {
+  window.location.reload()
+})
+
+bookingSocket.on("booking:deleted", () => {
+  window.location.reload()
+})

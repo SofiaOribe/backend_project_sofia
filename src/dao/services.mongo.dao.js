@@ -2,8 +2,6 @@ import serviceModel from "../models/services.model.js"
 
 class ServiceDao {
   async getServicesPaginated(query = {}) {
-    console.log("DAO EJECUTADO")
-    console.log("Query recibida:", query)
     return await serviceModel.paginate(
       {
         ...(query.name ? { name: { $regex: query.name, $options: "i" } } : {}),
@@ -33,7 +31,10 @@ class ServiceDao {
   }
 
   async update(id, updatedData) {
-    return await serviceModel.findByIdAndUpdate(id, updatedData)
+    return await serviceModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    })
   }
 
   async delete(id) {

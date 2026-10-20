@@ -3,47 +3,48 @@ import { z } from "zod"
 const serviceSchema = z.object({
   name: z
     .string({
-      error: (issue) => {
-        issue.input === undefined ? "El nombre es obligatorio" : "El nombre debe ser un texto"
-      },
+      error: (issue) =>
+        issue.input === undefined ? "El nombre es obligatorio" : "El nombre debe ser un texto",
     })
     .min(1, "El nombre es obligatorio"),
+
   description: z
     .string({
-      error: (issue) => {
+      error: (issue) =>
         issue.input === undefined
-          ? "La descripcion es obligatoria"
-          : "La descripcion debe ser un texto"
-      },
+          ? "La descripción es obligatoria"
+          : "La descripción debe ser un texto",
     })
-    .min(1, "La descripcion es obligatoria"),
+    .min(1, "La descripción es obligatoria"),
+
   duration: z
     .number({
-      error: (issue) => {
-        issue.input === undefined ? "La duracion es obligatoria" : "La duracion debe ser un numero"
-      },
+      error: (issue) =>
+        issue.input === undefined ? "La duración es obligatoria" : "La duración debe ser un número",
     })
-    .positive(1, "La duracion debe ser mayor a 0"),
+    .positive("La duración debe ser mayor a 0"),
+
   price: z
     .number({
-      error: (issue) => {
-        issue.input === undefined ? "El precio es obligatorio" : "El precio debe ser un numero"
-      },
+      error: (issue) =>
+        issue.input === undefined ? "El precio es obligatorio" : "El precio debe ser un número",
     })
-    .positive(1, "El precio debe ser mayor a 0"),
+    .positive("El precio debe ser mayor a 0"),
+
   category: z
     .string({
-      error: (issue) => {
-        issue.input === undefined ? "La categoria es obligatoria" : "La categoria debe ser un texto"
-      },
+      error: (issue) =>
+        issue.input === undefined
+          ? "La categoría es obligatoria"
+          : "La categoría debe ser un texto",
     })
-    .min(1, "La categoria es obligatoria"),
+    .min(1, "La categoría es obligatoria"),
+
   available: z.boolean({
-    error: (issue) => {
+    error: (issue) =>
       issue.input === undefined
         ? "La disponibilidad es obligatoria"
-        : "La disponibilidad debe ser verdadero o falso"
-    },
+        : "La disponibilidad debe ser verdadera o falsa",
   }),
 })
 
@@ -51,14 +52,14 @@ const validateService = (req, res, next) => {
   const resultado = serviceSchema.safeParse(req.body)
 
   if (!resultado.success) {
-    console.log(resultado.error)
-    return res.status(404).json({
-      error: "Datos invalidos",
+    return res.status(400).json({
+      error: "Datos inválidos",
       details: resultado.error.issues,
     })
   }
 
   req.body = resultado.data
+  next()
 }
 
 export default validateService

@@ -1,16 +1,6 @@
 import bookingModel from "../models/bookings.model.js"
 
 class BookingsDao {
-  async getBookingsPaginated(query = {}) {
-    return await bookingModel.paginate(
-      {},
-      {
-        limit: query.limit || 1,
-        page: query.page || 1,
-        lean: true,
-      },
-    )
-  }
   async getAll() {
     return await bookingModel.find({}).populate("services.service").lean()
   }
