@@ -4,11 +4,9 @@ import { errorHandler } from "./middlewares/errorHandler.js"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
-import env from "./config/env.config.js"
 
 import bookingsRouter from "./routes/bookings.router.js"
 import servicesRouter from "./routes/services.router.js"
-import messagesRouter from "./routes/messages.router.js"
 import viewRouter from "./routes/view.router.js"
 
 import configureHandlebars from "./config/handlebars.js"
@@ -21,6 +19,8 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const httpServer = createServer(app)
 export const socket = new Server(httpServer)
+
+app.set("io", socket)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -36,7 +36,6 @@ configureHandlebars(app, __dirname)
 // Routes
 app.use("/api/services", servicesRouter)
 app.use("/api/bookings", bookingsRouter)
-app.use("/api/messages", messagesRouter)
 app.use("/", viewRouter)
 
 // Static files
@@ -61,12 +60,9 @@ socket.on("connection", (socket) => {
   })
 })
 
-httpServer.listen(env.PORT, () => {
-  console.log("Servidor corre en el puerto " + env.PORT)
-})
-
 // Error handling
 app.use(errorHandler)
 app.use(notFound)
 
+export { httpServer }
 export default app

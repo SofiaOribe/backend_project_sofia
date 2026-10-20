@@ -1,12 +1,23 @@
 import bookingModel from "../models/bookings.model.js"
 
 class BookingsDao {
+  async getBookingsPaginated(query = {}) {
+    return await bookingModel.paginate(
+      {},
+      {
+        limit: query.limit || 1,
+        page: query.page || 1,
+        lean: true,
+      },
+    )
+  }
   async getAll() {
-    return await bookingModel.find({}).lean()
+    return await bookingModel.find({}).populate("services.service").lean()
   }
 
   async getById(id) {
-    return await bookingModel.findById(id).lean()
+    /*   return await bookingModel.findOne({ _id: id }).lean() */
+    return await bookingModel.findById(id).populate("services.service").lean()
   }
 
   async create(data) {

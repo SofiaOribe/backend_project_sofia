@@ -41,6 +41,10 @@ class ServiceController {
     try {
       const data = req.body
       const newService = await serviceServiceInstance.createService(data)
+
+      const io = req.app.get("io")
+      io?.emit("service:created", newService)
+
       return res.status(200).json({ message: "Nuevo servicio creado", newService })
     } catch (error) {
       return res.status(500).json({
@@ -52,6 +56,8 @@ class ServiceController {
     try {
       const sid = req.params.sid
       const updatedService = await serviceServiceInstance.updateService(sid, req.body)
+
+      req.app.get("io").emit("service:updated", updatedService)
 
       return res.status(200).json({ message: "Servicio actualizado", updatedService })
     } catch (error) {
@@ -65,6 +71,9 @@ class ServiceController {
     try {
       const sid = req.params.sid
       const deletedService = await serviceServiceInstance.deleteService(sid)
+
+      const io = req.app.get("io")
+      io?.emit("service:deleted", { id: sid })
 
       return res.status(200).json({ message: "Servicio eliminado", deletedService })
     } catch (error) {

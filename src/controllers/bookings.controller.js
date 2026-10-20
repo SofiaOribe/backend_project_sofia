@@ -6,7 +6,6 @@ class BookingsController {
   static async getBookingsController(req, res, next) {
     try {
       const bookings = await bookingsServiceInstance.getBookings()
-
       return res.status(200).json(bookings)
     } catch (error) {
       return res.status(500).json({
@@ -17,10 +16,10 @@ class BookingsController {
 
   static async getBookingByIdController(req, res, next) {
     try {
-      const id = req.params.id
-      const booking = await bookingsServiceInstance.getBookingById(id)
+      const bid = req.params.bid
+      const booking = await bookingsServiceInstance.getBookingById(bid)
 
-      return res.status(200).json({ message: "Nueva reserva creada", booking })
+      return res.status(200).json({ message: "Reserva obtenida correctamente", booking })
     } catch (error) {
       return res.status(500).json({
         message:
@@ -60,7 +59,6 @@ class BookingsController {
   static async deleteBookingController(req, res, next) {
     try {
       const bid = req.params.bid
-      console.log("ID recibido por el controller:", bid)
       const deletedBooking = await bookingsServiceInstance.deleteBooking(bid)
       return res.status(200).json({ message: "Booking eliminado", deletedBooking })
     } catch (error) {
