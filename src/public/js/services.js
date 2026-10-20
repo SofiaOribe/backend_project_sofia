@@ -1,7 +1,51 @@
 /* global io, document, window, alert */
+
+const socket = io()
+
 const serviceForm = document.querySelector("#service-form")
 const formMessage = document.querySelector("#form-message")
 
+// Recibir actualizaciones de servicios desde otras pestañas
+socket.on("service:updated", (updatedService) => {
+  const row = document.querySelector(`[data-service-id="${updatedService._id}"]`)
+
+  // Si el servicio no está en esta página, no hacemos nada
+  if (!row) return
+
+  const priceInput = row.querySelector(".price-input")
+  const checkbox = row.querySelector(".availability-input")
+  const label = checkbox?.nextElementSibling
+
+  // Actualizar precio
+  if (priceInput && updatedService.price !== undefined) {
+    priceInput.value = updatedService.price
+  }
+
+  // Actualizar disponibilidad
+  if (checkbox && updatedService.available !== undefined) {
+    checkbox.checked = updatedService.available
+
+    if (label) {
+      label.textContent = updatedService.available ? "Disponible" : "No disponible"
+    }
+  }
+})
+
+// Recibir nuevos servicios creados desde otra pestaña
+socket.on("service:created", () => {
+  window.location.reload()
+})
+
+// Recibir servicios eliminados desde otra pestaña
+socket.on("service:deleted", ({ id }) => {
+  const row = document.querySelector(`[data-service-id="${id}"]`)
+
+  if (row) {
+    row.remove()
+  }
+})
+
+// Crear servicio
 if (serviceForm && formMessage) {
   serviceForm.addEventListener("submit", async (event) => {
     event.preventDefault()
@@ -38,8 +82,6 @@ if (serviceForm && formMessage) {
       }
 
       serviceForm.reset()
-
-      window.location.reload()
     } catch (error) {
       console.error("Error al crear el servicio:", error)
       formMessage.textContent = error.message
@@ -82,9 +124,11 @@ document.addEventListener("click", async (event) => {
       throw new Error(result.message || result.error || "No se pudo actualizar el precio.")
     }
 
-    window.location.reload()
+    // No recargamos la página.
+    // Socket.IO actualizará esta pestaña y las demás.
   } catch (error) {
     alert(error.message)
+  } finally {
     button.disabled = false
   }
 })
@@ -119,7 +163,8 @@ document.addEventListener("change", async (event) => {
       throw new Error(result.message || result.error || "No se pudo actualizar la disponibilidad.")
     }
 
-    window.location.reload()
+    // No recargamos la página.
+    // Socket.IO actualizará las demás pestañas.
   } catch (error) {
     checkbox.checked = !newAvailability
     alert(error.message)
@@ -159,9 +204,12 @@ document.addEventListener("click", async (event) => {
       throw new Error(result.message || result.error || "No se pudo eliminar el servicio.")
     }
 
-    window.location.reload()
+    // El evento service:deleted eliminará la fila de las otras pestañas.
+    // Quitamos también la fila de esta pestaña.
+    row.remove()
   } catch (error) {
     alert(error.message)
+  } finally {
     button.disabled = false
   }
 })

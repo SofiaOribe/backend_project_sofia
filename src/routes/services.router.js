@@ -5,20 +5,16 @@ const router = Router()
 
 router.use(express.json(), express.urlencoded({ extended: true }))
 
-router
-  .route("/")
-  .get(ServiceController.getServicesPaginatedController)
-  .post(
-    validateService,
-    express.json(),
-    urlencoded({ extended: true }),
-    ServiceController.createServiceController,
-  )
+router.route("/").get(ServiceController.getServicesPaginatedController).post(
+  validateService,
+
+  ServiceController.createServiceController,
+)
 
 router
   .route("/:sid")
   .get(ServiceController.getServicesByIdController)
-  .put(express.json(), urlencoded({ extended: true }), ServiceController.updateServiceController)
+  .put(ServiceController.updateServiceController)
   .delete(ServiceController.deleteServiceController)
 
 export default router

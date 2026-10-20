@@ -47,14 +47,6 @@ app.use(routingDetector)
 socket.on("connection", (socket) => {
   console.log(`Cliente conectado. ID: ${socket.id}`)
 
-  // Escuchar mensaje del cliente
-  socket.on("mensaje_cliente", (data) => {
-    console.log(`Mensaje recibido: ${data}`)
-
-    // Responder a todos los clientes conectados
-    socket.emit("mensaje_servidor", `El servidor recibió: "${data}"`)
-  })
-
   socket.on("disconnect", () => {
     console.log(`Cliente desconectado. ID: ${socket.id}`)
   })

@@ -62,7 +62,7 @@ El proyecto utiliza una arquitectura en capas que separa las responsabilidades d
 El flujo de una petición es:
 
 ```bash
-Router → Controller → Service → Repository → DAO
+Router → Controller → Service → Repository → DAO → Models
 ```
 
 Cada capa tiene una responsabilidad específica y la comunicación debe respetar este orden.

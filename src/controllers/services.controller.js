@@ -57,7 +57,8 @@ class ServiceController {
       const sid = req.params.sid
       const updatedService = await serviceServiceInstance.updateService(sid, req.body)
 
-      req.app.get("io").emit("service:updated", updatedService)
+      const io = req.app.get("io")
+      io?.emit("service:updated", updatedService)
 
       return res.status(200).json({ message: "Servicio actualizado", updatedService })
     } catch (error) {

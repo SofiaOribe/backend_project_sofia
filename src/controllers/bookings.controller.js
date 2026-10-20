@@ -32,7 +32,7 @@ class BookingsController {
     try {
       const data = req.body
       const newBooking = await bookingsServiceInstance.createBooking(data)
-
+      req.app.get("io").emit("booking:created", newBooking)
       return res.status(200).json({ message: "Nueva reserva creada", newBooking })
     } catch (error) {
       return res.status(500).json({
@@ -46,6 +46,7 @@ class BookingsController {
       const { bid, sid } = req.params
 
       const updatedBooking = await bookingsServiceInstance.addServiceToBooking(bid, sid)
+      req.app.get("io").emit("booking:updated", updatedBooking)
       return res.status(200).json({ message: "Servicio agregado a la reserva", updatedBooking })
     } catch (error) {
       return res.status(500).json({
@@ -60,6 +61,9 @@ class BookingsController {
     try {
       const bid = req.params.bid
       const deletedBooking = await bookingsServiceInstance.deleteBooking(bid)
+      req.app.get("io").emit("booking:deleted", {
+        id: deletedBooking._id.toString(),
+      })
       return res.status(200).json({ message: "Booking eliminado", deletedBooking })
     } catch (error) {
       return res.status(500).json({
