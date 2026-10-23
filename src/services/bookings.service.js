@@ -1,8 +1,13 @@
 import BookingsRepository from "../repositories/bookings.repository.js"
+import ServicesRepository from "../repositories/services.repository.js"
 
 class BookingsService {
-  constructor(repository = new BookingsRepository()) {
+  constructor(
+    repository = new BookingsRepository(),
+    servicesRepository = new ServicesRepository(),
+  ) {
     this.repository = repository
+    this.servicesRepository = servicesRepository
   }
 
   async getBookings() {
@@ -26,11 +31,13 @@ class BookingsService {
 
   async addServiceToBooking(bid, sid) {
     const booking = await this.repository.getBookingById(bid)
-
+    const service = await this.servicesRepository.getServiceById(sid)
     if (!booking) {
       throw new Error(`Booking with ID ${bid} not found`)
     }
-
+    if (!service) {
+      throw new Error(`Service with ID ${sid} not found`)
+    }
     const existingService = booking.services.find((item) => {
       const serviceId = item.service?._id ? item.service._id.toString() : item.service.toString()
 

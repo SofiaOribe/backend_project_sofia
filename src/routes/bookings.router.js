@@ -8,9 +8,9 @@ router
   .route("/")
   .get(BookingsController.getBookingsController)
   .post(
-    validateBooking,
     express.json(),
     urlencoded({ extended: true }),
+    validateBooking,
     BookingsController.createBookingController,
   )
 
