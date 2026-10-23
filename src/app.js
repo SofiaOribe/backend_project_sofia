@@ -45,10 +45,10 @@ app.use(routingDetector)
 
 // Configuración de WebSockets
 socket.on("connection", (socket) => {
-  console.log(`Cliente conectado. ID: ${socket.id}`)
+  console.log(`Client connected. ID: ${socket.id}`)
 
   socket.on("disconnect", () => {
-    console.log(`Cliente desconectado. ID: ${socket.id}`)
+    console.log(`Client disconnected. ID: ${socket.id}`)
   })
 })
 

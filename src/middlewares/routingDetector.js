@@ -7,5 +7,5 @@ export const routingDetector = (req, res, next) => {
 }
 
 export function notFound(req, res, next) {
-  res.status(404).json({ error: "Ruta no encontrada" })
+  res.status(404).json({ error: "Route not found" })
 }

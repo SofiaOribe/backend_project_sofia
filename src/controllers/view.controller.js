@@ -8,7 +8,7 @@ class ViewController {
   static async getServices(req, res, next) {
     try {
       const services = await serviceServiceInstance.getServicesPaginated(req.query)
-      return res.render("services", { title: "Servicios", services })
+      return res.render("services", { title: "Services", services })
     } catch (error) {
       next(error)
     }

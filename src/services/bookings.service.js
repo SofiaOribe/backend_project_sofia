@@ -10,7 +10,7 @@ class BookingsService {
   }
   async getBookingById(id) {
     const booking = await this.repository.getBookingById(id)
-    if (!booking) throw new Error(`El booking con ID ${id} no fue encontrado`)
+    if (!booking) throw new Error(`The booking with ID ${id} was not found`)
 
     return booking
   }
@@ -18,7 +18,7 @@ class BookingsService {
   async createBooking(data) {
     const { clientName, clientEmail, date, time, status } = data
     if (!clientName || !clientEmail || !date || !time || !status) {
-      throw new Error("Faltan datos obligatorios para crear el booking")
+      throw new Error("Required information is missing to create the booking")
     }
 
     return await this.repository.createBooking(data)
@@ -28,7 +28,7 @@ class BookingsService {
     const booking = await this.repository.getBookingById(bid)
 
     if (!booking) {
-      throw new Error(`Booking con ID ${bid} no encontrado`)
+      throw new Error(`Booking with ID ${bid} not found`)
     }
 
     const existingService = booking.services.find((item) => {
@@ -52,9 +52,8 @@ class BookingsService {
   }
 
   async deleteBooking(id) {
-    console.log(id, "gijksdlf")
     const booking = await this.repository.getBookingById(id)
-    if (!booking) throw new Error(`Booking con ID ${id} no encontrado`)
+    if (!booking) throw new Error(`Booking with ID ${id} not found`)
     const deletedService = await this.repository.deleteBooking(id)
     return deletedService
   }

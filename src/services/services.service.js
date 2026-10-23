@@ -15,18 +15,13 @@ class ServicesService {
 
   async getServiceById(id) {
     const service = await this.repository.getServiceById(id)
-    if (!service) throw new Error(`El servicio con ${id} no fue encontrado`)
+    if (!service) throw new Error(`The service with ${id} was not found`)
     return service
   }
 
   async createService(data) {
     const { name, description, duration, price, category, available } = data
-    /* if (!name || !description || !duration || !price || !category || available === undefined) {
-      throw new Error("Faltan datos obligatorios para crear el servicio")
-    }
-    if (price < 0) {
-      throw new Error("El precio no puede ser negativo")
-    } */
+
     return await this.repository.createService({
       name,
       description,
@@ -39,14 +34,14 @@ class ServicesService {
 
   async updateService(id, data) {
     const service = await this.repository.getServiceById(id)
-    if (!service) throw new Error(`Servicio con ID ${id} no encontrado`)
+    if (!service) throw new Error(`Service with ID ${id} not found`)
     const updatedService = await this.repository.updateService(id, data)
     return updatedService
   }
 
   async deleteService(id) {
     const service = await this.repository.getServiceById(id)
-    if (!service) throw new Error(`Servicio con ID ${id} no encontrado`)
+    if (!service) throw new Error(`Service with ID ${id} not found`)
     const deletedService = await this.repository.deleteService(id)
     return deletedService
   }

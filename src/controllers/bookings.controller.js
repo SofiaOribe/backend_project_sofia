@@ -9,7 +9,7 @@ class BookingsController {
       return res.status(200).json(bookings)
     } catch (error) {
       return res.status(500).json({
-        message: error.message || "Error al tratar de obtener los bookings",
+        message: error.message || "Error while attempting to obtain bookings",
       })
     }
   }
@@ -19,11 +19,12 @@ class BookingsController {
       const bid = req.params.bid
       const booking = await bookingsServiceInstance.getBookingById(bid)
 
-      return res.status(200).json({ message: "Reserva obtenida correctamente", booking })
+      return res.status(200).json({ message: "Booking successfully confirmed", booking })
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de obtener la reserva con el ID: " + req.params.id,
+          error.message ||
+          "Error while attempting to obtain the booking with the ID: " + req.params.id,
       })
     }
   }
@@ -33,10 +34,10 @@ class BookingsController {
       const data = req.body
       const newBooking = await bookingsServiceInstance.createBooking(data)
       req.app.get("io").emit("booking:created", newBooking)
-      return res.status(200).json({ message: "Nueva reserva creada", newBooking })
+      return res.status(200).json({ message: "New booking created", newBooking })
     } catch (error) {
       return res.status(500).json({
-        message: error.message || "Error al tratar de crear la reserva",
+        message: error.message || "Error while trying to create the booking",
       })
     }
   }
@@ -47,12 +48,12 @@ class BookingsController {
 
       const updatedBooking = await bookingsServiceInstance.addServiceToBooking(bid, sid)
       req.app.get("io").emit("booking:updated", updatedBooking)
-      return res.status(200).json({ message: "Servicio agregado a la reserva", updatedBooking })
+      return res.status(200).json({ message: "Service added to the booking", updatedBooking })
     } catch (error) {
       return res.status(500).json({
         message:
           error.message ||
-          "Error al tratar de agregar el servicio a la reserva con el ID: " + req.params.bid,
+          "Error while attempting to add the service to the booking with the ID: " + req.params.bid,
       })
     }
   }
@@ -64,11 +65,12 @@ class BookingsController {
       req.app.get("io").emit("booking:deleted", {
         id: deletedBooking._id.toString(),
       })
-      return res.status(200).json({ message: "Booking eliminado", deletedBooking })
+      return res.status(200).json({ message: "Booking deleted", deletedBooking })
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de eliminar el servicio con el ID: " + req.params.sid,
+          error.message ||
+          "Error when attempting to delete the booking with the ID: " + req.params.sid,
       })
     }
   }
