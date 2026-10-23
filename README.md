@@ -342,6 +342,22 @@ Ejemplo de respuesta de validación:
 
 La validación Zod está conectada actualmente a la ruta `POST /api/services`. Aunque el controller también permite `PUT`, esa ruta no usa este middleware en la configuración actual. Las reservas tienen comprobaciones de campos obligatorios en la capa Service, pero todavía no un esquema Zod dedicado.
 
+### Reservas: Zod
+
+El middleware `src/middlewares/validateBookings.js` valida los datos enviados al crear una reserva mediante `POST /api/bookings`.
+
+Los campos validados son:
+
+- `clientName`: debe ser un texto de al menos 3 caracteres.
+- `clientEmail`: debe tener un formato de email válido.
+- `date`: debe tener el formato `DD-MM-YYYY` y representar una fecha válida.
+- `time`: debe tener el formato de 24 horas `HH:mm`.
+- `status`: debe ser un texto no vacío.
+
+La validación utiliza `safeParse()` de Zod. Si los datos no cumplen las reglas definidas, el middleware devuelve el estado HTTP `400 Bad Request`, junto con un mensaje de error y los detalles de las validaciones que fallaron. Si los datos son válidos, asigna los datos validados a `req.body` y continúa con el controller.
+
+Esta validación se aplica a la creación de reservas. No implica que todas las rutas de reservas estén validadas con Zod.
+
 ## Vistas Handlebars
 
 Además de la API JSON, el proyecto incluye vistas para gestionar los datos desde el navegador:
