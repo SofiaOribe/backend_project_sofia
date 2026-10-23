@@ -6,7 +6,6 @@ class BookingsDao {
   }
 
   async getById(id) {
-    /*   return await bookingModel.findOne({ _id: id }).lean() */
     return await bookingModel.findById(id).populate("services.service").lean()
   }
 

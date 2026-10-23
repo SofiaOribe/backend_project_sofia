@@ -121,11 +121,11 @@ document.addEventListener("click", async (event) => {
   const bookingId = button.dataset.bookingId
 
   if (!bookingId) {
-    alert("No se encontró el ID del booking.")
+    alert("Booking ID not found.")
     return
   }
 
-  const confirmed = window.confirm("¿Estás segura de que querés eliminar este booking?")
+  const confirmed = window.confirm("Are you sure you want to delete this booking?")
 
   if (!confirmed) return
 
@@ -139,7 +139,7 @@ document.addEventListener("click", async (event) => {
     const result = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(result.message || result.error || "No se pudo eliminar el booking.")
+      throw new Error(result.message || result.error || "The booking could not be deleted.")
     }
 
     window.location.reload()

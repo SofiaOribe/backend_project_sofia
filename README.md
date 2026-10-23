@@ -134,14 +134,14 @@ La conexión a MongoDB se configura en `src/config/db.js`; las variables de ento
 
 Los servicios utilizan los campos siguientes:
 
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `name` | String | Nombre del servicio |
-| `description` | String | Descripción |
-| `duration` | Number | Duración |
-| `price` | Number | Precio |
-| `category` | String | Categoría |
-| `available` | Boolean | Indica si está disponible |
+| Campo         | Tipo    | Descripción               |
+| ------------- | ------- | ------------------------- |
+| `name`        | String  | Nombre del servicio       |
+| `description` | String  | Descripción               |
+| `duration`    | Number  | Duración                  |
+| `price`       | Number  | Precio                    |
+| `category`    | String  | Categoría                 |
+| `available`   | Boolean | Indica si está disponible |
 
 ### Reserva
 
@@ -160,13 +160,13 @@ El campo `service` es una referencia `ObjectId` al modelo de servicios. Al consu
 
 La base de las rutas es `/api/services`.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/services` | Lista servicios con filtros y paginación |
-| POST | `/api/services` | Crea un servicio; pasa por el middleware Zod |
-| GET | `/api/services/:sid` | Consulta un servicio por ID |
-| PUT | `/api/services/:sid` | Actualiza un servicio |
-| DELETE | `/api/services/:sid` | Elimina un servicio |
+| Método | Endpoint             | Descripción                                  |
+| ------ | -------------------- | -------------------------------------------- |
+| GET    | `/api/services`      | Lista servicios con filtros y paginación     |
+| POST   | `/api/services`      | Crea un servicio; pasa por el middleware Zod |
+| GET    | `/api/services/:sid` | Consulta un servicio por ID                  |
+| PUT    | `/api/services/:sid` | Actualiza un servicio                        |
+| DELETE | `/api/services/:sid` | Elimina un servicio                          |
 
 ### Crear un servicio
 
@@ -189,15 +189,15 @@ El body debe ser un objeto JSON. Los campos numéricos deben enviarse como núme
 
 El endpoint `GET /api/services` acepta estos query params en la implementación actual:
 
-| Parámetro | Ejemplo | Función |
-|---|---|---|
-| `name` | `?name=consulta` | Busca nombres que contengan el texto, sin distinguir mayúsculas y minúsculas |
-| `category` | `?category=Consulta` | Filtra por categoría exacta |
-| `available` | `?available=true` | Filtra disponibilidad con `true` o `false` |
-| `page` | `?page=2` | Selecciona la página |
-| `limit` | `?limit=5` | Cantidad de resultados por página |
-| `sortBy` | `?sortBy=price` | Campo por el que ordenar |
-| `order` | `?order=desc` | `desc` para descendente; otro valor produce ascendente cuando se usa `sortBy` |
+| Parámetro   | Ejemplo              | Función                                                                       |
+| ----------- | -------------------- | ----------------------------------------------------------------------------- |
+| `name`      | `?name=consulta`     | Busca nombres que contengan el texto, sin distinguir mayúsculas y minúsculas  |
+| `category`  | `?category=Consulta` | Filtra por categoría exacta                                                   |
+| `available` | `?available=true`    | Filtra disponibilidad con `true` o `false`                                    |
+| `page`      | `?page=2`            | Selecciona la página                                                          |
+| `limit`     | `?limit=5`           | Cantidad de resultados por página                                             |
+| `sortBy`    | `?sortBy=price`      | Campo por el que ordenar                                                      |
+| `order`     | `?order=desc`        | `desc` para descendente; otro valor produce ascendente cuando se usa `sortBy` |
 
 Ejemplos:
 
@@ -236,13 +236,13 @@ Usá un `sid` que exista en tu base de datos.
 
 La base de las rutas es `/api/bookings`.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/bookings` | Lista reservas con los servicios asociados poblados |
-| POST | `/api/bookings` | Crea una reserva |
-| GET | `/api/bookings/:bid` | Consulta una reserva por ID, con datos de sus servicios |
-| DELETE | `/api/bookings/:bid` | Elimina una reserva |
-| POST | `/api/bookings/:bid/services/:sid` | Asocia un servicio a una reserva |
+| Método | Endpoint                           | Descripción                                             |
+| ------ | ---------------------------------- | ------------------------------------------------------- |
+| GET    | `/api/bookings`                    | Lista reservas con los servicios asociados poblados     |
+| POST   | `/api/bookings`                    | Crea una reserva                                        |
+| GET    | `/api/bookings/:bid`               | Consulta una reserva por ID, con datos de sus servicios |
+| DELETE | `/api/bookings/:bid`               | Elimina una reserva                                     |
+| POST   | `/api/bookings/:bid/services/:sid` | Asocia un servicio a una reserva                        |
 
 ### Crear una reserva
 
@@ -252,7 +252,7 @@ Solicitud a `POST /api/bookings`:
 {
   "clientName": "Alex Example",
   "clientEmail": "alex@example.com",
-  "date": "2026-11-05",
+  "date": "11-11-2026",
   "time": "10:30",
   "status": "pending"
 }
@@ -279,10 +279,7 @@ GET /api/bookings/66b123456789abcdef123456
 La capa DAO usa esta consulta de Mongoose:
 
 ```js
-bookingModel
-  .findById(id)
-  .populate("services.service")
-  .lean()
+bookingModel.findById(id).populate("services.service").lean()
 ```
 
 Así, cada elemento de `services` incluye el documento del servicio relacionado en `service`, además de `quantity`. La respuesta del controller tiene la forma general:
@@ -328,16 +325,16 @@ El middleware `src/middlewares/validateServices.js` valida el body de creación 
 - `price`: debe ser un número positivo.
 - `available`: debe ser un booleano.
 
-Si la validación falla, responde con estado HTTP `400`, el mensaje `Datos inválidos` y un array `details` con los problemas detectados.
+Si la validación falla, responde con estado HTTP `400`, el mensaje `Invalid data` y un array `details` con los problemas detectados.
 
 Ejemplo de respuesta de validación:
 
 ```json
 {
-  "error": "Datos inválidos",
+  "error": "Invalid data",
   "details": [
     {
-      "message": "El nombre es obligatorio"
+      "message": "The name is required."
     }
   ]
 }
@@ -369,12 +366,12 @@ Los archivos de cliente `src/public/js/services.js` y `src/public/js/bookings.js
 
 ## Scripts disponibles
 
-| Comando | Descripción |
-|---|---|
-| `npm run dev` | Inicia el servidor con reinicio automático mediante `node --watch` |
-| `npm start` | Inicia el servidor |
-| `npm run lint` | Ejecuta ESLint |
-| `npm run format` | Formatea archivos con Prettier |
+| Comando          | Descripción                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| `npm run dev`    | Inicia el servidor con reinicio automático mediante `node --watch` |
+| `npm start`      | Inicia el servidor                                                 |
+| `npm run lint`   | Ejecuta ESLint                                                     |
+| `npm run format` | Formatea archivos con Prettier                                     |
 
 El script `npm test` actualmente es un placeholder y termina con un mensaje de que no hay pruebas configuradas.
 

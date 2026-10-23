@@ -26,7 +26,7 @@ socket.on("service:updated", (updatedService) => {
     checkbox.checked = updatedService.available
 
     if (label) {
-      label.textContent = updatedService.available ? "Disponible" : "No disponible"
+      label.textContent = updatedService.available ? "Available" : "Not available"
     }
   }
 })
@@ -78,12 +78,12 @@ if (serviceForm && formMessage) {
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result.message || result.error || "No se pudo crear el servicio.")
+        throw new Error(result.message || result.error || "The service could not be created.")
       }
 
       serviceForm.reset()
     } catch (error) {
-      console.error("Error al crear el servicio:", error)
+      console.error("Error creating the service:", error)
       formMessage.textContent = error.message
     } finally {
       submitButton.disabled = false
@@ -103,7 +103,7 @@ document.addEventListener("click", async (event) => {
   const price = Number(priceInput.value)
 
   if (priceInput.value.trim() === "" || !Number.isFinite(price) || price < 0) {
-    alert("Ingresá un precio válido.")
+    alert("Enter a valid price.")
     return
   }
 
@@ -121,11 +121,8 @@ document.addEventListener("click", async (event) => {
     const result = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(result.message || result.error || "No se pudo actualizar el precio.")
+      throw new Error(result.message || result.error || "The price could not be updated.")
     }
-
-    // No recargamos la página.
-    // Socket.IO actualizará esta pestaña y las demás.
   } catch (error) {
     alert(error.message)
   } finally {
@@ -160,11 +157,8 @@ document.addEventListener("change", async (event) => {
     const result = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(result.message || result.error || "No se pudo actualizar la disponibilidad.")
+      throw new Error(result.message || result.error || "Availability could not be updated.")
     }
-
-    // No recargamos la página.
-    // Socket.IO actualizará las demás pestañas.
   } catch (error) {
     checkbox.checked = !newAvailability
     alert(error.message)
@@ -172,7 +166,7 @@ document.addEventListener("change", async (event) => {
     checkbox.disabled = false
 
     if (label) {
-      label.textContent = checkbox.checked ? "Disponible" : "No disponible"
+      label.textContent = checkbox.checked ? "Available" : "Not available"
     }
   }
 })
@@ -187,7 +181,7 @@ document.addEventListener("click", async (event) => {
   const id = row.dataset.serviceId
   const serviceName = row.querySelector(".service-name").textContent.trim()
 
-  const confirmed = window.confirm(`¿Seguro que querés borrar el servicio "${serviceName}"?`)
+  const confirmed = window.confirm(`Are you sure you want to delete the service "${serviceName}"?`)
 
   if (!confirmed) return
 
@@ -201,11 +195,8 @@ document.addEventListener("click", async (event) => {
     const result = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(result.message || result.error || "No se pudo eliminar el servicio.")
+      throw new Error(result.message || result.error || "The service could not be deleted.")
     }
-
-    // El evento service:deleted eliminará la fila de las otras pestañas.
-    // Quitamos también la fila de esta pestaña.
     row.remove()
   } catch (error) {
     alert(error.message)

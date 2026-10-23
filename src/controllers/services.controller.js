@@ -9,7 +9,7 @@ class ServiceController {
       return res.status(200).json(services)
     } catch (error) {
       return res.status(500).json({
-        message: error.message || "Error al tratar de obtener los servicios",
+        message: error.message || "Error while trying to obtain services",
       })
     }
   }
@@ -19,7 +19,7 @@ class ServiceController {
       return res.status(200).json(services)
     } catch (error) {
       return res.status(500).json({
-        message: error.message || "Error al tratar de obtener los servicios",
+        message: error.message || "Error trying to obtain the services",
       })
     }
   }
@@ -32,7 +32,7 @@ class ServiceController {
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de obtener el servicio con el ID: " + req.params.sid,
+          error.message || "Error while attempting to obtain the service with the ID: " + req.params.sid,
       })
     }
   }
@@ -45,10 +45,10 @@ class ServiceController {
       const io = req.app.get("io")
       io?.emit("service:created", newService)
 
-      return res.status(200).json({ message: "Nuevo servicio creado", newService })
+      return res.status(200).json({ message: "New service created", newService })
     } catch (error) {
       return res.status(500).json({
-        message: error.message || "Error al tratar de crear el servicio",
+        message: error.message || "Error while attempting to create the service",
       })
     }
   }
@@ -60,11 +60,11 @@ class ServiceController {
       const io = req.app.get("io")
       io?.emit("service:updated", updatedService)
 
-      return res.status(200).json({ message: "Servicio actualizado", updatedService })
+      return res.status(200).json({ message: "Service updated", updatedService })
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de actualizar el servicio con el ID: " + req.params.id,
+          error.message || "Error while attempting to update the service with the ID: " + req.params.id,
       })
     }
   }
@@ -76,11 +76,11 @@ class ServiceController {
       const io = req.app.get("io")
       io?.emit("service:deleted", { id: sid })
 
-      return res.status(200).json({ message: "Servicio eliminado", deletedService })
+      return res.status(200).json({ message: "Service deleted", deletedService })
     } catch (error) {
       return res.status(500).json({
         message:
-          error.message || "Error al tratar de eliminar el servicio con el ID: " + req.params.sid,
+          error.message || "Error when attempting to delete the service with the ID: " + req.params.sid,
       })
     }
   }

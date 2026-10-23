@@ -5,13 +5,13 @@ import connectDB from "./config/db.js"
 const startServer = async () => {
   try {
     await connectDB()
-    console.log("Conectado a DB")
+    console.log("Connected to DB")
 
     httpServer.listen(env.PORT, () => {
-      console.log("Servidor corre en el puerto " + env.PORT)
+      console.log("Server runs on the port " + env.PORT)
     })
   } catch (error) {
-    console.error("Error al iniciar el servidor:", error)
+    console.error("Error starting the server:", error)
     process.exitCode = 1
   }
 }
